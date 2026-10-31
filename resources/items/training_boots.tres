@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemDefinition" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/item_definition.gd" id="1_script"]
+[ext_resource type="Resource" path="res://resources/equipment/feet.tres" id="2_equipment"]
+
+[resource]
+script = ExtResource("1_script")
+item_id = "gear.training_boots"
+display_name = "Training Boots"
+item_kind = 1
+equipment = ExtResource("2_equipment")
+stackable = false
+max_stack = 1

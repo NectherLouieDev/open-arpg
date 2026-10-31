@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="SkillDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/skill_definition.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+skill_name = "Iron Impact"
+description = "A heavy body-driven strike."
+anima_cost = 20.0
+cooldown = 5.0
+skill_range = 3.3
+damage = 26.0
+action_lockout = 0.45
+animation_category = 2
+targeting_shape = 1
+cone_angle_degrees = 100.0
+effect_color = Color(1, 0.65, 0.3, 1)
+effect_radius = 0.8

@@ -1,0 +1,52 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/approachable_component.gd" id="1_approachable"]
+[ext_resource type="Script" path="res://scripts/loot_chest.gd" id="2_loot_chest"]
+[ext_resource type="Resource" path="res://resources/loot_tables/chest.tres" id="3_loot_table"]
+
+[sub_resource type="BoxShape3D" id="ChestShape"]
+size = Vector3(1.5, 1.0, 1.0)
+
+[sub_resource type="BoxMesh" id="ChestMesh"]
+size = Vector3(1.5, 1.0, 1.0)
+
+[sub_resource type="StandardMaterial3D" id="ChestMaterial"]
+albedo_color = Color(0.62, 0.34, 0.12, 1)
+
+[sub_resource type="SphereShape3D" id="InteractShape"]
+radius = 2.2
+
+[node name="Chest" type="StaticBody3D"]
+collision_layer = 1
+collision_mask = 1
+script = ExtResource("2_loot_chest")
+loot_table = ExtResource("3_loot_table")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.5, 0)
+shape = SubResource("ChestShape")
+
+[node name="Visual" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.5, 0)
+mesh = SubResource("ChestMesh")
+material_override = SubResource("ChestMaterial")
+
+[node name="ApproachableComponent" type="Node" parent="."]
+script = ExtResource("1_approachable")
+interaction_radius = 1.2
+approach_offset = 0.2
+
+[node name="InteractArea" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractArea"]
+position = Vector3(0, 0.8, 0)
+shape = SubResource("InteractShape")
+
+[node name="Prompt" type="Label3D" parent="."]
+position = Vector3(0, 1.6, 0)
+billboard = 1
+font_size = 40
+text = "F / A · OPEN"
+pixel_size = 0.008

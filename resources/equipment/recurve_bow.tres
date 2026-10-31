@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="WeaponDefinition" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/weapon_definition.gd" id="1_script"]
+[ext_resource type="Resource" path="res://resources/skills/bow_shot.tres" id="2_skill"]
+
+[resource]
+script = ExtResource("1_script")
+equipment_name = "Island Recurve"
+item_id = "weapon.island_recurve"
+rarity = 1
+equipment_line = "bow"
+gear_slot = 5
+granted_skill = ExtResource("2_skill")
+attack_damage = 13.0
+attack_range = 7.0
+attack_interval = 1.1
+attack_arc_degrees = 65.0
+attack_animation_category = 0

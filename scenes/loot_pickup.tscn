@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/loot_pickup.gd" id="1_pickup"]
+
+[sub_resource type="SphereShape3D" id="PickupShape"]
+radius = 0.8
+
+[sub_resource type="SphereMesh" id="PickupMesh"]
+radius = 0.2
+height = 0.4
+
+[node name="LootPickup" type="Area3D"]
+collision_layer = 0
+collision_mask = 1
+monitoring = true
+script = ExtResource("1_pickup")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.4, 0)
+shape = SubResource("PickupShape")
+
+[node name="Visual" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.4, 0)
+mesh = SubResource("PickupMesh")
+
+[node name="Label3D" type="Label3D" parent="."]
+position = Vector3(0, 0.95, 0)
+billboard = 1
+font_size = 32
+pixel_size = 0.008
+modulate = Color(1, 1, 1, 1)

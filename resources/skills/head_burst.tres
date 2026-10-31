@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="SkillDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/skill_definition.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+skill_name = "Crown Burst"
+description = "A short-range burst powered by the head slot."
+anima_cost = 25.0
+cooldown = 4.0
+skill_range = 4.0
+damage = 30.0
+action_lockout = 0.35
+animation_category = 3
+effect_color = Color(0.35, 0.8, 1, 1)
+effect_radius = 0.75

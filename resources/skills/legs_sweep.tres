@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="SkillDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/skill_definition.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+skill_name = "Low Sweep"
+description = "A quick sweep from the legs."
+anima_cost = 18.0
+cooldown = 3.5
+skill_range = 3.0
+damage = 22.0
+action_lockout = 0.3
+animation_category = 1
+targeting_shape = 1
+cone_angle_degrees = 120.0
+effect_color = Color(0.55, 1, 0.55, 1)
+effect_radius = 0.65

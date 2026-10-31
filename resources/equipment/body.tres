@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EquipmentDefinition" format=3 uid="uid://f40mweuiarce"]
+
+[ext_resource type="Script" uid="uid://c4o6ni3u3obel" path="res://scripts/equipment_definition.gd" id="1_script"]
+[ext_resource type="Resource" path="res://resources/skills/body_impact.tres" id="2_skill"]
+
+[resource]
+script = ExtResource("1_script")
+equipment_name = "Training Vest"
+item_id = "gear.training_vest"
+equipment_line = "light_armor"
+gear_slot = 1
+granted_skill = ExtResource("2_skill")
+max_health_bonus = 15.0

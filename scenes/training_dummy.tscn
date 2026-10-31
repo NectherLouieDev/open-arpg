@@ -1,0 +1,62 @@
+[gd_scene format=3 uid="uid://dbka2f3yyqes0"]
+
+[ext_resource type="Script" uid="uid://c5mkajewllkpe" path="res://scripts/training_dummy.gd" id="1_dummy"]
+[ext_resource type="Script" path="res://scripts/approachable_component.gd" id="2_approachable"]
+[ext_resource type="Texture2D" path="res://assets/placeholder_actor.svg" id="3_actor_texture"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape_dummy"]
+radius = 0.52
+
+[sub_resource type="StandardMaterial3D" id="SkillHitParticleMaterial"]
+shading_mode = 2
+albedo_color = Color(0.2, 0.85, 1, 1)
+emission_enabled = true
+emission = Color(0.12, 0.65, 1, 1)
+
+[sub_resource type="SphereMesh" id="SkillHitParticleMesh"]
+radius = 0.12
+height = 0.24
+
+[node name="TrainingDummy" type="StaticBody3D" unique_id=1186664656]
+collision_mask = 0
+script = ExtResource("1_dummy")
+
+[node name="ApproachableComponent" type="Node" parent="."]
+script = ExtResource("2_approachable")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=117455078]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape_dummy")
+
+[node name="Visual" type="Sprite3D" parent="." unique_id=853634769]
+position = Vector3(0, 1.0, 0)
+pixel_size = 0.01
+billboard = 1
+texture = ExtResource("3_actor_texture")
+region_enabled = true
+region_rect = Rect2(0, 0, 128, 192)
+modulate = Color(1, 0.7, 0.55, 1)
+
+[node name="DamageLabel" type="Label3D" parent="." unique_id=1069054382]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+billboard = 1
+font_size = 64
+outline_size = 8
+
+[node name="SkillHitParticles" type="CPUParticles3D" parent="." unique_id=1538145227]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+material_override = SubResource("SkillHitParticleMaterial")
+emitting = false
+amount = 20
+lifetime = 0.55
+one_shot = true
+explosiveness = 0.9
+mesh = SubResource("SkillHitParticleMesh")
+direction = Vector3(0, 1, 0)
+spread = 180.0
+gravity = Vector3(0, -3, 0)
+initial_velocity_min = 1.2
+initial_velocity_max = 4.0
+scale_amount_min = 0.08
+scale_amount_max = 0.16
+color = Color(0.2, 0.85, 1, 1)

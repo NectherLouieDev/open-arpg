@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="WeaponDefinition" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/weapon_definition.gd" id="1_script"]
+[ext_resource type="Resource" path="res://resources/skills/stick_thrust.tres" id="2_skill"]
+
+[resource]
+script = ExtResource("1_script")
+equipment_name = "Wayfarer Stick"
+item_id = "weapon.wayfarer_stick"
+rarity = 0
+equipment_line = "stick"
+gear_slot = 5
+granted_skill = ExtResource("2_skill")
+attack_damage = 10.0
+attack_range = 3.8
+attack_interval = 0.48
+attack_arc_degrees = 80.0
+attack_animation_category = 1

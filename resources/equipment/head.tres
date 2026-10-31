@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="EquipmentDefinition" format=3 uid="uid://bqg3c0bwmdvrx"]
+
+[ext_resource type="Script" uid="uid://c4o6ni3u3obel" path="res://scripts/equipment_definition.gd" id="1_script"]
+[ext_resource type="Resource" path="res://resources/skills/head_burst.tres" id="2_skill"]
+
+[resource]
+script = ExtResource("1_script")
+equipment_name = "Training Circlet"
+item_id = "gear.training_circlet"
+equipment_line = "light_armor"
+granted_skill = ExtResource("2_skill")
+max_health_bonus = 5.0

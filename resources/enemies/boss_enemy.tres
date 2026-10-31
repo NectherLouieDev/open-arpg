@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="EnemyDefinition" format=3 uid="uid://bgacf5neq2hfx"]
+
+[ext_resource type="Script" uid="uid://ol7dtrsp42se" path="res://scripts/enemy_definition.gd" id="1_definition"]
+[ext_resource type="Resource" path="res://resources/loot_tables/boss_enemy.tres" id="2_loot_table"]
+
+[resource]
+script = ExtResource("1_definition")
+loot_table = ExtResource("2_loot_table")
+display_name = "Island Guardian"
+max_health = 900.0
+move_speed = 3.6
+aggro_range = 15.0
+leash_range = 26.0
+patrol_points = PackedVector3Array(-2, 0, 0, 2, 0, 0)
+patrol_wait = 1.5
+attack_damage = 30.0
+attack_range = 3.2
+attack_interval = 2.4
+attack_arc_degrees = 150.0
+attack_telegraph_duration = 1.25
+attack_recovery_duration = 1.0
+attack_animation_category = 2
+death_cleanup_delay = 1.0
+telegraph_color = Color(0.65, 0.12, 1, 1)
+visual_tint = Color(0.7, 0.2, 0.9, 1)
+visual_scale = Vector3(1.7, 1.7, 1.7)

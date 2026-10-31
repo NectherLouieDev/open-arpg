@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="SkillDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/skill_definition.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+skill_name = "Weapon Cleave"
+description = "A decisive heavy weapon strike."
+anima_cost = 28.0
+cooldown = 6.0
+skill_range = 3.8
+damage = 36.0
+action_lockout = 0.5
+animation_category = 2
+targeting_shape = 1
+cone_angle_degrees = 110.0
+effect_color = Color(1, 0.4, 0.3, 1)
+effect_radius = 0.9

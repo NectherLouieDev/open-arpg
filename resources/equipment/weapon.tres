@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WeaponDefinition" format=3 uid="uid://blqijhghi82xj"]
+
+[ext_resource type="Script" uid="uid://bsb0rcnrhwopy" path="res://scripts/weapon_definition.gd" id="1_script"]
+[ext_resource type="Resource" path="res://resources/skills/weapon_cleave.tres" id="2_skill"]
+
+[resource]
+script = ExtResource("1_script")
+attack_damage = 16.0
+attack_range = 3.6
+attack_interval = 0.7
+attack_animation_category = 2
+equipment_name = "Training Blade"
+item_id = "weapon.training_blade"
+equipment_line = "blade"
+gear_slot = 5
+granted_skill = ExtResource("2_skill")
+attack_damage_bonus = 3.0

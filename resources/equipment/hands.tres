@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EquipmentDefinition" format=3 uid="uid://dxxoh04qq7xbk"]
+
+[ext_resource type="Script" uid="uid://c4o6ni3u3obel" path="res://scripts/equipment_definition.gd" id="1_script"]
+[ext_resource type="Resource" path="res://resources/skills/hands_bolt.tres" id="2_skill"]
+
+[resource]
+script = ExtResource("1_script")
+equipment_name = "Training Gloves"
+item_id = "gear.training_gloves"
+equipment_line = "light_armor"
+gear_slot = 4
+granted_skill = ExtResource("2_skill")
+attack_damage_bonus = 2.0

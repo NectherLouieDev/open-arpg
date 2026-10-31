@@ -1,0 +1,129 @@
+[gd_scene load_steps=23 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemy.gd" id="1_enemy"]
+[ext_resource type="Script" path="res://scripts/enemy_ai.gd" id="2_enemy_ai"]
+[ext_resource type="Script" path="res://scripts/movement_component.gd" id="3_movement"]
+[ext_resource type="PackedScene" path="res://scenes/stat_component.tscn" id="4_stats"]
+[ext_resource type="Script" path="res://scripts/combat_component.gd" id="5_combat"]
+[ext_resource type="Script" path="res://scripts/visual_component.gd" id="6_visual"]
+[ext_resource type="Texture2D" path="res://assets/placeholder_actor.svg" id="7_actor_texture"]
+[ext_resource type="Script" path="res://scripts/direction_component.gd" id="8_direction"]
+[ext_resource type="Script" path="res://scripts/hit_component.gd" id="9_hit"]
+[ext_resource type="Script" path="res://scripts/animation_component.gd" id="10_animation"]
+[ext_resource type="Script" path="res://scripts/enemy_state_manager.gd" id="11_state_manager"]
+[ext_resource type="Script" path="res://scripts/enemy_idle_state.gd" id="12_idle"]
+[ext_resource type="Script" path="res://scripts/enemy_patrol_state.gd" id="13_patrol"]
+[ext_resource type="Script" path="res://scripts/enemy_chase_state.gd" id="14_chase"]
+[ext_resource type="Script" path="res://scripts/enemy_attack_state.gd" id="15_attack"]
+[ext_resource type="Script" path="res://scripts/enemy_dead_state.gd" id="16_dead"]
+[ext_resource type="Resource" path="res://resources/enemies/melee_enemy.tres" id="17_definition"]
+[ext_resource type="Script" path="res://scripts/enemy_attack_telegraph.gd" id="18_telegraph"]
+[ext_resource type="Script" path="res://scripts/approachable_component.gd" id="19_approachable"]
+
+[sub_resource type="CapsuleShape3D" id="EnemyShape"]
+radius = 0.42
+height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="EnemyHitParticleMaterial"]
+shading_mode = 2
+albedo_color = Color(0.2, 0.85, 1.0, 1.0)
+emission_enabled = true
+emission = Color(0.12, 0.65, 1.0, 1.0)
+
+[sub_resource type="SphereMesh" id="EnemyHitParticleMesh"]
+radius = 0.12
+height = 0.24
+
+[node name="Enemy" type="CharacterBody3D"]
+collision_layer = 1
+collision_mask = 1
+script = ExtResource("1_enemy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0.0, 0.9, 0.0)
+shape = SubResource("EnemyShape")
+
+[node name="EnemyAI" type="Node" parent="."]
+script = ExtResource("2_enemy_ai")
+definition = ExtResource("17_definition")
+
+[node name="EnemyStateManager" type="Node" parent="EnemyAI"]
+script = ExtResource("11_state_manager")
+
+[node name="Idle" type="Node" parent="EnemyAI/EnemyStateManager"]
+script = ExtResource("12_idle")
+
+[node name="Patrol" type="Node" parent="EnemyAI/EnemyStateManager"]
+script = ExtResource("13_patrol")
+
+[node name="Chase" type="Node" parent="EnemyAI/EnemyStateManager"]
+script = ExtResource("14_chase")
+
+[node name="Attack" type="Node" parent="EnemyAI/EnemyStateManager"]
+script = ExtResource("15_attack")
+
+[node name="Dead" type="Node" parent="EnemyAI/EnemyStateManager"]
+script = ExtResource("16_dead")
+
+[node name="MovementComponent" type="Node" parent="."]
+script = ExtResource("3_movement")
+
+[node name="StatComponent" parent="." instance=ExtResource("4_stats")]
+
+[node name="CombatComponent" type="Node" parent="."]
+script = ExtResource("5_combat")
+
+[node name="VisualComponent" type="Node" parent="."]
+script = ExtResource("6_visual")
+
+[node name="DirectionComponent" type="Node" parent="VisualComponent"]
+script = ExtResource("8_direction")
+
+[node name="HitComponent" type="Node" parent="VisualComponent"]
+script = ExtResource("9_hit")
+
+[node name="AnimationComponent" type="Node" parent="VisualComponent"]
+script = ExtResource("10_animation")
+
+[node name="ApproachableComponent" type="Node" parent="."]
+script = ExtResource("19_approachable")
+interaction_radius = 1.5
+approach_offset = 0.2
+
+[node name="BodyVisual" type="Sprite3D" parent="."]
+position = Vector3(0.0, 1.0, 0.0)
+pixel_size = 0.01
+billboard = 1
+texture = ExtResource("7_actor_texture")
+region_enabled = true
+region_rect = Rect2(0.0, 0.0, 128.0, 192.0)
+modulate = Color(1.0, 0.55, 0.45, 1.0)
+
+[node name="AimPivot" type="Node3D" parent="."]
+position = Vector3(0.0, 1.25, 0.0)
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+path_desired_distance = 0.5
+target_desired_distance = 0.4
+
+[node name="AttackTelegraph" type="MeshInstance3D" parent="."]
+position = Vector3(0.0, 0.04, 0.0)
+script = ExtResource("18_telegraph")
+
+[node name="SkillHitParticles" type="CPUParticles3D" parent="."]
+position = Vector3(0.0, 0.9, 0.0)
+material_override = SubResource("EnemyHitParticleMaterial")
+emitting = false
+amount = 20
+lifetime = 0.55
+one_shot = true
+explosiveness = 0.9
+mesh = SubResource("EnemyHitParticleMesh")
+direction = Vector3(0.0, 1.0, 0.0)
+spread = 180.0
+gravity = Vector3(0.0, -3.0, 0.0)
+initial_velocity_min = 1.2
+initial_velocity_max = 4.0
+scale_amount_min = 0.08
+scale_amount_max = 0.16
+color = Color(0.2, 0.85, 1.0, 1.0)

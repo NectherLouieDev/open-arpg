@@ -1,0 +1,41 @@
+[gd_resource type="Resource" script_class="LootTable" format=3 uid="uid://b4205jdtedbqj"]
+
+[ext_resource type="Script" uid="uid://c0fp405lka4dq" path="res://scripts/loot_table.gd" id="1_table"]
+[ext_resource type="Script" uid="uid://c4vrcjvep65mp" path="res://scripts/loot_table_entry.gd" id="2_entry"]
+[ext_resource type="Resource" path="res://resources/items/gold.tres" id="3_gold"]
+[ext_resource type="Resource" path="res://resources/items/str_shard.tres" id="4_str"]
+[ext_resource type="Resource" path="res://resources/items/fin_shard.tres" id="5_fin"]
+[ext_resource type="Resource" path="res://resources/items/ark_shard.tres" id="6_ark"]
+[ext_resource type="Resource" path="res://resources/items/wayfarer_stick.tres" id="7_stick"]
+
+[sub_resource type="Resource" id="Gold"]
+script = ExtResource("2_entry")
+item = ExtResource("3_gold")
+minimum_quantity = 30
+maximum_quantity = 55
+
+[sub_resource type="Resource" id="STRShard"]
+script = ExtResource("2_entry")
+item = ExtResource("4_str")
+minimum_quantity = 2
+maximum_quantity = 3
+
+[sub_resource type="Resource" id="FINShard"]
+script = ExtResource("2_entry")
+item = ExtResource("5_fin")
+drop_chance = 0.75
+maximum_quantity = 2
+
+[sub_resource type="Resource" id="ARKShard"]
+script = ExtResource("2_entry")
+item = ExtResource("6_ark")
+drop_chance = 0.75
+maximum_quantity = 2
+
+[sub_resource type="Resource" id="Stick"]
+script = ExtResource("2_entry")
+item = ExtResource("7_stick")
+
+[resource]
+script = ExtResource("1_table")
+entries = Array[ExtResource("2_entry")]([SubResource("Gold"), SubResource("STRShard"), SubResource("FINShard"), SubResource("ARKShard"), SubResource("Stick")])
