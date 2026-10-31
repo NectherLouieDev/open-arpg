@@ -11,3 +11,7 @@
 /.mono/
 /bin/
 /obj/
+
+AGENTS.md
+REFACTOR_NOTES.md
+TARGETING_NOTES.md
