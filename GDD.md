@@ -10,9 +10,9 @@
 **Engine:** Godot
 **Target Audience:** 18–40 years old; gamers in their thirties with limited playtime; fans of Torchlight, Diablo, and extraction games; controller-first players
 
-**Core Concept:** A time-limited, session-based extraction action-RPG where a lone player explores a procedurally generated island, fights creatures, collects loot, and crafts upgrades—all while racing against a deadly "night shroud." Loot is only kept if the player successfully extracts; death means losing everything from that run. The ultimate goal is to find and slay the island's boss (a Dragon or Kapre) lurking in the island's depths.
+**Core Concept:** Set in an alternate 1700s–1800s Philippines untouched by Spanish colonization, this time-limited extraction action-RPG follows a skilled indigenous warrior defending their prosperous barangay. The warrior explores a procedurally generated island, fights creatures, collects loot, and crafts upgrades while racing against the deadly Shroud curse. Loot is kept only if the player extracts; death means losing the run's loot and earned experience. The ultimate goal is to find and slay the mythical Dragon that masters the Shroud.
 
-**USP:** The fusion of extraction risk/reward with ARPG loot/grind/crafting (Torchlight/Diablo-style), presented in a **2D hand-drawn cartoony character art style over 3D environments** (Bastion-inspired), set in a **precolonial Spanish-era Philippines** setting, with **controller-first combat**.
+**USP:** The fusion of extraction risk/reward with ARPG loot/grind/crafting (Torchlight/Diablo-style), presented in a **2D hand-drawn cartoony character art style over 3D environments** (Bastion-inspired), set in an **alternate-history Philippines untouched by Spanish colonization**, with **controller-first combat**.
 
 **Scope Note:** The game currently focuses on **one island** with one boss. Additional islands (each with their own boss, Mega Man-style) are planned as **post-launch / extra content**.
 
@@ -233,24 +233,23 @@ Attribute progression mirrors equipment mastery, as a **parallel usage-based tra
 
 ### 4.1 Narrative Premise
 
-Set in a **precolonial Spanish-era Philippines** (i.e., before Spanish colonization; the exact period and alternate-history details are still being discussed and left open for now). A once-peaceful village lives under constant threat from a powerful creature—a Dragon or Kapre—whose presence brings a deadly "night shroud" that engulfs the nearby island each night. As the Hero, you answer the call to slay the beast, embarking on repeated expeditions into the dangerous island to grow strong enough to face the boss in its lair.
+Set in an **alternate 1700s–1800s Philippines untouched by Spanish colonization**, Slayent follows a skilled indigenous warrior sworn to protect their prosperous barangay. A mythical Dragon, master of the Shroud curse, haunts a nearby island. The warrior makes repeated expeditions into its changing wilderness, gathering strength and clues until they can confront the Dragon and end the curse.
 
-**Note:** The story is still under discussion. The only fixed element is the **precolonial Spanish-era Philippine setting**. All other narrative details are open and subject to change.
+**Note:** The setting, protagonist's role, barangay, Dragon, and Shroud curse are established story pillars. Specific character histories, cultural details, and the Dragon's origins remain open for development.
 
 ### 4.2 Key Story Elements
 
-- **Hook:** Protect the village by ending the shroud curse; uncover the mystery of the island and the boss's connection to the shroud.
-- **Setting:** A precolonial Spanish-era Philippine island with varied biomes (forest, ruins, caves, mountain paths), ancient ruins, and hidden secrets.
-- **Protagonist:** A lone warrior armed with their chosen weapon loadout.
-- **Antagonist:** The island boss—a Dragon or Kapre—master of the shroud.
+- **Hook:** Protect the prosperous barangay by slaying the Dragon and ending the Shroud curse.
+- **Setting:** An alternate 1700s–1800s Philippines untouched by Spanish colonization. The nearby cursed island contains lush jungles, ancient ruins, caves, and volcanic mountains.
+- **Protagonist:** A skilled indigenous warrior who prepares in the barangay and ventures alone into the cursed island.
+- **Antagonist:** A mythical Dragon, master of the Shroud curse.
 - **Core Struggle:** Balancing exploration, looting, and survival while hunting your ultimate prey.
 - **Mystery:** The island's layout and the boss's exact location change between runs (ProcGen). Deeper island areas hold the boss encounter.
 
 ### 4.3 Story Delivery
 
-- Environmental storytelling through ruins, carvings, and found journals.
-- Brief NPC dialogues in the Hub provide context and motivation.
-- Visual storytelling: village condition worsens if the boss isn't defeated.
+- Storytelling through the island's environments, ruins, and tribal lore, with brief conversations in the barangay Hub.
+- The Dragon's Shroud threatens the community; the barangay's population and condition visibly worsen when the Dragon remains undefeated.
 
 ---
 
@@ -258,18 +257,21 @@ Set in a **precolonial Spanish-era Philippines** (i.e., before Spanish colonizat
 
 ### 5.1 The Hub
 
-- Safe zone with blacksmith (upgrades), alchemist (potions), craftsman (crafting, including Talismans), elder (story), and portal keeper.
-- Visual changes reflect story progress (villager count, building repairs).
-- All progression, crafting, and preparation happen here.
+- A safe barangay where the player prepares for every island expedition and completes all progression and crafting.
+- **Panday:** repairs and upgrades equipment.
+- **Babaylan:** serves as shaman and alchemist, preparing remedies and helping craft Talismans.
+- **Elder:** shares tribal lore, context, and guidance about the Dragon and the island.
+- **Portal keeper:** enables travel to the island and supports extraction logistics.
+- Visual changes reflect story progress; villager count and building condition decline while the Dragon remains undefeated and improve after the curse is ended.
 
 ### 5.2 The Cursed Island (ProcGen)
 
 - **Design Philosophy:** Roguelite extraction—a procedurally generated island per run, with a single biome-based boss. The island itself is the level.
-- **Biomes:** Forest, ruins, caves, mountain paths—each with unique enemies and resources.
-- **Verticality:** Multi-level exploration.
-- **Secrets:** Hidden paths, optional challenge areas with better loot.
+- **Biomes:** Metroidvania-inspired exploration across lush jungles, ancient ruins, caves, and volcanic mountains, each with distinct enemies and resources.
+- **Verticality:** Multi-level exploration with layered routes and spaces to revisit as the player learns the island.
+- **Secrets:** Hidden routes, environmental secrets, and optional challenge areas with better loot.
 - **Time Pressure:** The Shroud visibly advances, creating natural urgency.
-- **Boss Encounter:** A single randomized deep-island encounter (Dragon or Kapre). Some bosses may require keys or crafted items to access. Players must decide whether to fight or flee when encountering powerful enemies.
+- **Boss Encounter:** The mythical Dragon waits in the deep island. Access may require keys or crafted items. Players must decide whether to confront the Dragon or extract with what they have found.
 
 **Scope Note:** The game currently focuses on **one island with one boss**. Additional islands—each with their own boss, Mega Man-style—are planned as **extra/post-launch content**.
 
@@ -318,7 +320,7 @@ To keep scope achievable for a solo developer, the player uses a **small set of 
 
 - Skills reuse these base animations; differentiation comes from **VFX, timing, and hit effects**.
 - Base animations should be polished—quality over quantity. Reference: NRFTW reuses/rotates its animation set the same way.
-- Thematic fit: precolonial Philippine setting means melee leans into **stick fighting (arnis/eskrima)** motion.
+- Thematic fit: alternate-history Philippine setting means melee leans into **stick fighting (arnis/eskrima)** motion.
 
 #### 6.3.2 Sprite Direction & Flipping
 
@@ -447,7 +449,7 @@ To keep scope achievable for a solo developer, the player uses a **small set of 
 - Implement equipment-based skills and mastery/upgrade tree systems.
 - **Implement Talismans, Shards, Attribute Progress, Attribute Rank, and the attribute tree (mirroring the mastery tree).**
 - Add puzzles and exploration elements.
-- Create boss (Dragon/Kapre) encounter prototype.
+- Create the mythical Dragon encounter prototype.
 
 ### Month 4: Polish & Balance
 - Refine combat feel and enemy AI.
@@ -469,15 +471,15 @@ To keep scope achievable for a solo developer, the player uses a **small set of 
 ### 11.1 Steam Page Elements
 
 - **Short Description:** "Slayent is a roguelite extraction action-RPG about racing against time to hunt a monstrous boss before a deadly shroud consumes everything—and keeping the loot you risked everything to find."
-- **Long Description:** Focus on tension, meaningful progression, the risk/reward loop, 2D hand-drawn cartoony art over 3D environments, auto-attack ARPG combat, equipment-based skills, **crafted Talismans and earned attribute ranks**, and the unique precolonial Philippine setting.
+- **Long Description:** Focus on tension, meaningful progression, the risk/reward loop, 2D hand-drawn cartoony art over 3D environments, auto-attack ARPG combat, equipment-based skills, **crafted Talismans and earned attribute ranks**, and the alternate-history 1700s–1800s Philippine setting untouched by Spanish colonization.
 - **Key Features:**
   - Time-limited exploration with ProcGen islands.
   - Satisfying 2D hand-drawn Bastion-inspired combat with auto-attack.
   - Equipment-based skills and usage-driven mastery progression.
   - **Crafted Talismans and usage-driven Attribute Rank progression (STR / FIN / ARK).**
   - Persistent upgrades and deep item synergies.
-  - Compelling boss hunt (Dragon/Kapre).
-  - Precolonial Philippine setting.
+  - Compelling hunt for the mythical Dragon that commands the Shroud.
+  - Alternate-history 1700s–1800s Philippine setting untouched by Spanish colonization.
 
 ### 11.2 Visual Identity
 
@@ -490,7 +492,7 @@ To keep scope achievable for a solo developer, the player uses a **small set of 
 - For fans of tense, skill-based action games.
 - Appeals to players who enjoy meaningful progression and ARPG loot.
 - Highlights unique time-pressure mechanic and extraction risk/reward.
-- Emphasizes the hand-drawn art, Bastion-inspired style, and precolonial Philippine-inspired world.
+- Emphasizes the hand-drawn art, Bastion-inspired style, and alternate-history Philippine world.
 - Controller-first ARPG combat with auto-attack.
 
 ---
@@ -517,8 +519,7 @@ To keep scope achievable for a solo developer, the player uses a **small set of 
 
 ## 13. Open Questions & TBD
 
-- **Story:** Still under discussion. Only the precolonial Spanish-era Philippine setting is fixed.
-- **Boss identity:** Dragon or Kapre (or both as separate bosses in future islands) — to be decided.
+- **Story details:** The indigenous warrior's personal history, specific tribal lore, and the Dragon's origins remain to be developed.
 - **Equipment mastery curve:** Exact XP thresholds and skill power scaling per Mastery Rank TBD.
 - **Attribute Progress curve:** Exact XP thresholds and base-stat gains per Attribute Rank TBD.
 - **Attribute tree shape:** Node count, costs, and effects per attribute TBD — start by mirroring the equipment mastery tree structure.

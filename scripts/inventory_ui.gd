@@ -17,6 +17,7 @@ var _was_paused := false
 var _selected_item: ItemDefinition
 var _selected_item_quantity := 1
 var _selected_gear_slot := -1
+var _selected_talisman_slot := -1
 var _selection_from_gear := false
 var _last_input_was_mouse := false
 var _tooltip_action := ""
@@ -32,7 +33,9 @@ var _inventory_grid: GridContainer
 var _inventory_cells: Array[Button] = []
 var _capacity_label: Label
 var _gear_buttons: Array[Button] = []
+var _talisman_buttons: Array[Button] = []
 var _status_label: Label
+var _attribute_summary_label: Label
 var _tooltip_panel: PanelContainer
 var _tooltip_text: RichTextLabel
 var _tooltip_action_button: Button
@@ -56,6 +59,10 @@ func bind_player(value: Player) -> void:
 		player.inventory.inventory_changed.connect(_refresh_ui)
 	if not player.equipment.equipment_set_changed.is_connected(_refresh_ui):
 		player.equipment.equipment_set_changed.connect(_refresh_ui)
+	if not player.talismans.talismans_changed.is_connected(_refresh_ui):
+		player.talismans.talismans_changed.connect(_refresh_ui)
+	if not player.attributes.attributes_changed.is_connected(_refresh_ui):
+		player.attributes.attributes_changed.connect(_refresh_ui)
 	_refresh_ui()
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -269,17 +276,22 @@ func _build_equipment_panel() -> void:
 	talisman_row.add_theme_constant_override("separation", 8)
 	content.add_child(talisman_row)
 	for slot_index in range(3):
-		var talisman := PanelContainer.new()
+		var talisman := Button.new()
 		talisman.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		talisman.custom_minimum_size = Vector2(0.0, 54.0)
-		talisman.add_theme_stylebox_override("panel", _make_talisman_style())
-		var label := Label.new()
-		label.text = "◇ EMPTY"
-		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		label.add_theme_color_override("font_color", Color("c5ad75"))
-		talisman.add_child(label)
+		talisman.custom_minimum_size = Vector2(0.0, 62.0)
+		talisman.focus_mode = Control.FOCUS_ALL
+		talisman.add_theme_stylebox_override("normal", _make_talisman_style())
+		talisman.add_theme_stylebox_override("hover", _make_talisman_style())
+		talisman.add_theme_stylebox_override("pressed", _make_talisman_style())
+		talisman.pressed.connect(_on_talisman_slot_activated.bind(slot_index, talisman))
+		talisman.focus_entered.connect(_on_talisman_slot_selected.bind(slot_index, talisman))
+		talisman.mouse_entered.connect(_on_talisman_slot_selected.bind(slot_index, talisman))
+		talisman.mouse_exited.connect(_schedule_tooltip_hide)
 		talisman_row.add_child(talisman)
+		_talisman_buttons.append(talisman)
+	_attribute_summary_label = Label.new()
+	_attribute_summary_label.add_theme_color_override("font_color", Color("c5ad75"))
+	content.add_child(_attribute_summary_label)
 
 	_status_label = Label.new()
 	_status_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -391,6 +403,10 @@ func _refresh_ui() -> void:
 		var gear_name := equipment.equipment_name if is_instance_valid(equipment) else "Empty"
 		var skill_name := equipment.granted_skill.skill_name if is_instance_valid(equipment) and is_instance_valid(equipment.granted_skill) else "No skill"
 		_gear_buttons[gear_slot].text = "%s\n%s\n%s · %s" % [GEAR_NAMES[gear_slot], gear_name, SKILL_BINDINGS[gear_slot], skill_name]
+	for slot_index in range(TalismanComponent.SLOT_COUNT):
+		var talisman := player.talismans.get_equipped(slot_index)
+		_talisman_buttons[slot_index].text = "TALISMAN %d\n%s" % [slot_index + 1, talisman.display_name if is_instance_valid(talisman) else "◇ EMPTY"]
+	_attribute_summary_label.text = "STR %.1f   FIN %.1f   ARK %.1f" % [player.attributes.get_attribute(AttributeComponent.Attribute.STR), player.attributes.get_attribute(AttributeComponent.Attribute.FIN), player.attributes.get_attribute(AttributeComponent.Attribute.ARK)]
 	if selected_id != "" and not is_instance_valid(_selected_cell):
 		_selected_item = null
 		_selected_gear_slot = -1
@@ -404,6 +420,8 @@ func _refresh_ui() -> void:
 func _get_item_color(item: ItemDefinition) -> Color:
 	if item.item_kind == ItemDefinition.ItemKind.EQUIPMENT and is_instance_valid(item.equipment):
 		return RARITY_COLORS[clampi(item.equipment.rarity, 0, RARITY_COLORS.size() - 1)]
+	if item.item_kind == ItemDefinition.ItemKind.TALISMAN and is_instance_valid(item.talisman):
+		return RARITY_COLORS[clampi(item.talisman.rarity, 0, RARITY_COLORS.size() - 1)]
 	match item.item_kind:
 		ItemDefinition.ItemKind.CURRENCY:
 			return Color("f5c84b")
@@ -430,6 +448,8 @@ func _on_inventory_item_activated(item: ItemDefinition, cell: Button) -> void:
 	_on_inventory_item_selected(item, cell)
 	if item.item_kind == ItemDefinition.ItemKind.EQUIPMENT and is_instance_valid(item.equipment):
 		_equip_selected()
+	elif item.item_kind == ItemDefinition.ItemKind.TALISMAN and is_instance_valid(item.talisman):
+		_equip_selected_talisman()
 	elif item.item_kind == ItemDefinition.ItemKind.CONSUMABLE:
 		_open_quick_slot_picker()
 
@@ -451,6 +471,67 @@ func _on_gear_slot_activated(gear_slot: int, button: Button) -> void:
 		_equip_selected()
 	else:
 		_unequip_selected()
+
+func _on_talisman_slot_selected(slot_index: int, button: Button) -> void:
+	_selected_gear_slot = -1
+	_selected_gear_button = null
+	_selected_talisman_slot = slot_index
+	if is_instance_valid(_selected_item) and _selected_item.item_kind == ItemDefinition.ItemKind.TALISMAN:
+		_show_item_tooltip(_selected_cell, _selected_item, _selected_item_quantity)
+		return
+	var talisman := player.talismans.get_equipped(slot_index)
+	if is_instance_valid(talisman):
+		_set_tooltip_action("talisman_unequip")
+		_tooltip_action_button.text = "UNEQUIP TALISMAN  ·  A / ENTER / CLICK"
+		_show_tooltip(button, "[b]TALISMAN SLOT %d[/b]\n%s" % [slot_index + 1, talisman.get_description()])
+	else:
+		_tooltip_panel.visible = false
+
+func _on_talisman_slot_activated(slot_index: int, button: Button) -> void:
+	_on_talisman_slot_selected(slot_index, button)
+	if is_instance_valid(_selected_item) and _selected_item.item_kind == ItemDefinition.ItemKind.TALISMAN:
+		_equip_selected_talisman(slot_index)
+	elif not _last_input_was_mouse:
+		_unequip_selected_talisman(slot_index)
+
+func _equip_selected_talisman(slot_index: int = -1) -> void:
+	if not is_instance_valid(player) or not is_instance_valid(_selected_item) or not is_instance_valid(_selected_item.talisman):
+		return
+	if slot_index < 0:
+		for candidate in range(TalismanComponent.SLOT_COUNT):
+			if not is_instance_valid(player.talismans.get_equipped(candidate)):
+				slot_index = candidate
+				break
+	if slot_index < 0 or slot_index >= TalismanComponent.SLOT_COUNT:
+		_status_label.text = "Choose a Talisman slot."
+		return
+	var item := _selected_item
+	if not player.inventory.remove_item(item.item_id, 1):
+		_status_label.text = "That Talisman is no longer available."
+		return
+	var previous := player.talismans.get_equipped(slot_index)
+	if not player.talismans.equip(slot_index, item.talisman):
+		player.inventory.try_add_item(item)
+		return
+	if is_instance_valid(previous):
+		var previous_item := player.inventory.get_item_definition_for_talisman(previous)
+		if is_instance_valid(previous_item):
+			player.inventory.try_add_item(previous_item)
+	_selected_item = null
+	_selected_cell = null
+	_selected_talisman_slot = slot_index
+	_status_label.text = "%s equipped in Talisman slot %d." % [item.display_name, slot_index + 1]
+	_refresh_ui()
+
+func _unequip_selected_talisman(slot_index: int) -> void:
+	var current := player.talismans.get_equipped(slot_index)
+	var item := player.inventory.get_item_definition_for_talisman(current)
+	if not is_instance_valid(item) or player.inventory.try_add_item(item) != 1:
+		_status_label.text = "Cannot unequip: item definition is missing or inventory is full."
+		return
+	player.talismans.unequip(slot_index)
+	_status_label.text = "%s unequipped." % current.display_name
+	_refresh_ui()
 
 func _update_selection() -> void:
 	if not is_instance_valid(player):
@@ -483,6 +564,10 @@ func _show_item_tooltip(anchor: Control, item: ItemDefinition, quantity: int) ->
 		text += "[color=#e8d49b]Current:[/color] %s\n" % (current.equipment_name if is_instance_valid(current) else "Empty")
 		text += "[color=#a8e4c7]Selected:[/color] %s\n\n" % item.equipment.equipment_name
 		text += _format_stat_delta(item.equipment, current)
+	elif item.item_kind == ItemDefinition.ItemKind.TALISMAN and is_instance_valid(item.talisman):
+		_set_tooltip_action("talisman_equip")
+		_tooltip_action_button.text = "EQUIP TALISMAN  ·  A / ENTER / CLICK"
+		text += "\n\nSelect a Talisman slot to choose where it goes."
 	_show_tooltip(anchor, text)
 
 func _show_equipment_tooltip(anchor: Control, gear_slot: int) -> void:
@@ -527,6 +612,10 @@ func _on_tooltip_action_pressed() -> void:
 		_unequip_selected()
 	elif _tooltip_action == "bind":
 		_open_quick_slot_picker()
+	elif _tooltip_action == "talisman_equip":
+		_equip_selected_talisman()
+	elif _tooltip_action == "talisman_unequip":
+		_unequip_selected_talisman(_selected_talisman_slot)
 
 func _open_quick_slot_picker() -> void:
 	if not is_instance_valid(_selected_item) or _selected_item.item_kind != ItemDefinition.ItemKind.CONSUMABLE:

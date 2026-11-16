@@ -1,0 +1,55 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/hub_npc.gd" id="1_npc"]
+
+[sub_resource type="CylinderShape3D" id="TalkRange"]
+radius = 2.0
+height = 3.0
+
+[sub_resource type="CapsuleMesh" id="BodyMesh"]
+radius = 0.34
+height = 1.15
+
+[sub_resource type="SphereMesh" id="HeadMesh"]
+radius = 0.31
+height = 0.62
+
+[sub_resource type="StandardMaterial3D" id="BodyMaterial"]
+albedo_color = Color(0.34, 0.35, 0.48, 1)
+
+[sub_resource type="StandardMaterial3D" id="HeadMaterial"]
+albedo_color = Color(0.71, 0.47, 0.31, 1)
+
+[sub_resource type="CylinderMesh" id="StaffMesh"]
+top_radius = 0.055
+bottom_radius = 0.08
+height = 1.7
+
+[sub_resource type="StandardMaterial3D" id="StaffMaterial"]
+albedo_color = Color(0.39, 0.25, 0.13, 1)
+
+[node name="Elder" type="Area3D"]
+collision_layer = 0
+collision_mask = 4
+script = ExtResource("1_npc")
+npc_title = "Elder"
+dialogue_message = "The Dragon's Shroud steals more than daylight. Find the old paths through the island, and return before night closes around you."
+
+[node name="TalkRange" type="CollisionShape3D" parent="."]
+position = Vector3(0, 1.3, 0)
+shape = SubResource("TalkRange")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.85, 0)
+mesh = SubResource("BodyMesh")
+material_override = SubResource("BodyMaterial")
+
+[node name="Head" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.65, 0)
+mesh = SubResource("HeadMesh")
+material_override = SubResource("HeadMaterial")
+
+[node name="Staff" type="MeshInstance3D" parent="."]
+position = Vector3(0.53, 0.85, 0)
+mesh = SubResource("StaffMesh")
+material_override = SubResource("StaffMaterial")

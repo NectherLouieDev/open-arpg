@@ -1,17 +1,17 @@
 extends Node3D
-## Follows the player with an isometric orthographic camera and projects clicks to ground.
+## Follows the player with a low-angle isometric perspective camera and projects clicks to ground.
 class_name CameraRig
 
-@export var camera_offset := Vector3(14.0, 18.0, 14.0)
-@export var ortho_size := 22.0
+@export var camera_offset := Vector3(16.0, 18.0, 16.0)
+@export_range(20.0, 75.0, 1.0) var perspective_fov := 45.0
 
 @onready var camera: Camera3D = $Camera3D
 
 func _ready() -> void:
 	if not is_instance_valid(camera):
 		return
-	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
-	camera.size = ortho_size
+	camera.projection = Camera3D.PROJECTION_PERSPECTIVE
+	camera.fov = perspective_fov
 	camera.top_level = true
 
 func follow(target_global_pos: Vector3) -> void:

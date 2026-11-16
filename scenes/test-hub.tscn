@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://bmftfobnph7br"]
+
+[ext_resource type="Script" uid="uid://yig1vhddbg0l" path="res://scripts/test_hub.gd" id="1_hub"]
+[ext_resource type="PackedScene" path="res://scenes/boat.tscn" id="2_boat"]
+
+[node name="TestHub" type="Node3D" unique_id=720167205]
+script = ExtResource("1_hub")
+
+[node name="MoveClickTarget" type="Node3D" parent="." unique_id=1423942389 groups=["move_click_target"]]
+
+[node name="MoveStickTarget" type="Node3D" parent="." unique_id=309306499 groups=["move_stick_target"]]
+
+[node name="Boat" parent="." unique_id=1440516195 instance=ExtResource("2_boat")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.7, 17)

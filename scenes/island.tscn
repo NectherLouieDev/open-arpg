@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://u8grxqjd8wq3"]
+
+[ext_resource type="Script" uid="uid://dt1nfjmpdhufa" path="res://scripts/island.gd" id="1_island"]
+[ext_resource type="PackedScene" path="res://scenes/island-environment.tscn" id="2_environment"]
+
+[node name="Island" type="Node3D" unique_id=1562464828]
+script = ExtResource("1_island")
+
+[node name="IslandEnvironment" parent="." unique_id=1523736163 instance=ExtResource("2_environment")]

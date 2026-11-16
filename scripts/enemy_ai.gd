@@ -137,10 +137,8 @@ func navigate_to(destination: Vector3) -> void:
 	if map.is_valid() and NavigationServer3D.map_get_iteration_id(map) > 0 and not NavigationServer3D.map_get_regions(map).is_empty():
 		var path_position := navigation_agent.get_next_path_position()
 		if not navigation_agent.is_navigation_finished():
-			if path_position.distance_squared_to(enemy.global_position) <= 0.0001:
-				stop_moving()
-				return
-			next_position = path_position
+			if path_position.distance_squared_to(enemy.global_position) > 0.0001:
+				next_position = path_position
 	var direction := next_position - enemy.global_position
 	direction.y = 0.0
 	if direction.length_squared() > 0.01:
@@ -151,12 +149,8 @@ func navigate_to(destination: Vector3) -> void:
 func is_at_navigation_target() -> bool:
 	if not is_instance_valid(enemy) or _patrol_index < 0 or _patrol_index >= definition.patrol_points.size():
 		return true
-	if is_instance_valid(navigation_agent):
-		var map := navigation_agent.get_navigation_map()
-		if map.is_valid() and NavigationServer3D.map_get_iteration_id(map) > 0 and not NavigationServer3D.map_get_regions(map).is_empty():
-			return navigation_agent.is_navigation_finished()
 	var point := _patrol_origin_transform * definition.patrol_points[_patrol_index]
-	return Vector2(enemy.global_position.x - point.x, enemy.global_position.z - point.z).length() <= 0.45
+	return Vector2(enemy.global_position.x - point.x, enemy.global_position.z - point.z).length() <= 0.55
 
 func stop_moving() -> void:
 	if is_instance_valid(movement):

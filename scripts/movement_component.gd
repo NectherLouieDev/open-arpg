@@ -14,10 +14,10 @@ signal dash_finished
 @export var dash_anima_cost := 25.0
 @export var hit_stagger_duration := 0.12
 @export var hit_knockback_speed := 5.5
-
 var stats: StatComponent
 var attributes: AttributeComponent
 var body: CharacterBody3D
+var navigation_agent: NavigationAgent3D
 
 var velocity := Vector3.ZERO
 var _move_target := Vector3.ZERO
@@ -37,16 +37,23 @@ func set_move_intent(world_direction: Vector3) -> void:
 		_has_move_target = false
 		_facing = _move_intent.normalized()
 
+func set_navigation_agent(agent: NavigationAgent3D) -> void:
+	navigation_agent = agent
+
 func set_facing_direction(world_direction: Vector3) -> void:
 	world_direction.y = 0.0
 	if world_direction.length_squared() > 0.001:
 		_facing = world_direction.normalized()
 
 func set_move_target(world_pos: Vector3) -> void:
-	_move_target = world_pos
-	_move_target.y = 0.0
+	var projected_target := project_to_navigation(world_pos)
+	projected_target.y = body.global_position.y if is_instance_valid(body) else world_pos.y
+	var target_changed := not _has_move_target or _move_target.distance_squared_to(projected_target) > 0.25
+	_move_target = projected_target
 	_has_move_target = true
 	_move_intent = Vector3.ZERO
+	if target_changed and is_instance_valid(navigation_agent):
+		navigation_agent.target_position = _move_target
 	if is_instance_valid(body):
 		var direction := _move_target - body.global_position
 		direction.y = 0.0
@@ -60,6 +67,17 @@ func clear_move_target() -> void:
 	velocity = Vector3.ZERO
 	if is_instance_valid(body):
 		body.velocity = Vector3.ZERO
+	if is_instance_valid(navigation_agent):
+		navigation_agent.target_position = body.global_position if is_instance_valid(body) else Vector3.ZERO
+
+func project_to_navigation(world_pos: Vector3) -> Vector3:
+	if not is_instance_valid(navigation_agent):
+		return Vector3(world_pos.x, 0.0, world_pos.z)
+	var map := navigation_agent.get_navigation_map()
+	if map.is_valid() and NavigationServer3D.map_get_iteration_id(map) > 0:
+		var point := NavigationServer3D.map_get_closest_point(map, world_pos)
+		return Vector3(point.x, 0.0, point.z)
+	return Vector3(world_pos.x, 0.0, world_pos.z)
 
 func request_dash() -> void:
 	if not is_instance_valid(body) or not is_instance_valid(stats):
@@ -89,6 +107,7 @@ func tick(delta: float) -> void:
 	if _dash_time_left > 0.0:
 		_dash_time_left = maxf(0.0, _dash_time_left - delta)
 		velocity = _dash_direction * dash_speed
+		velocity.y = 0.0
 		body.velocity = velocity
 		body.move_and_slide()
 		velocity = body.velocity
@@ -99,6 +118,7 @@ func tick(delta: float) -> void:
 		_stagger_time_left = maxf(0.0, _stagger_time_left - delta)
 		_knockback_velocity = _knockback_velocity.move_toward(Vector3.ZERO, hit_knockback_speed * 5.0 * delta)
 		velocity = _knockback_velocity
+		velocity.y = 0.0
 		body.velocity = velocity
 		body.move_and_slide()
 		velocity = body.velocity
@@ -110,12 +130,35 @@ func tick(delta: float) -> void:
 		move_direction = _move_intent.normalized()
 		_has_move_target = false
 	elif _has_move_target:
-		var to_target := _move_target - body.global_position
-		to_target.y = 0.0
-		if to_target.length() <= click_arrival_distance:
-			_has_move_target = false
+		if is_instance_valid(navigation_agent):
+			var map := navigation_agent.get_navigation_map()
+			if not map.is_valid() or NavigationServer3D.map_get_iteration_id(map) == 0:
+				body.velocity = Vector3.ZERO
+				velocity = Vector3.ZERO
+				return
+			var next_position := navigation_agent.get_next_path_position()
+			var to_next := next_position - body.global_position
+			to_next.y = 0.0
+			var distance_to_target := body.global_position.distance_to(_move_target)
+			if distance_to_target <= click_arrival_distance:
+				_has_move_target = false
+			elif navigation_agent.is_navigation_finished() or to_next.length_squared() <= 0.001:
+				# A newly assigned or unreachable path can report finished before
+				# the actor reaches its projected target, or return the actor's
+				# current position as the next waypoint. Keep moving toward the
+				# walkable point; boundary colliders prevent leaving the island.
+				var direct_to_target := _move_target - body.global_position
+				direct_to_target.y = 0.0
+				move_direction = direct_to_target.normalized()
+			else:
+				move_direction = to_next.normalized() if to_next.length_squared() > 0.001 else Vector3.ZERO
 		else:
-			move_direction = to_target.normalized()
+			var to_target := _move_target - body.global_position
+			to_target.y = 0.0
+			if to_target.length() <= click_arrival_distance:
+				_has_move_target = false
+			else:
+				move_direction = to_target.normalized()
 
 	if move_direction.length_squared() > 0.001:
 		var speed_multiplier := attributes.get_move_speed_multiplier() if is_instance_valid(attributes) else 1.0

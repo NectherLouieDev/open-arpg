@@ -13,8 +13,10 @@ signal target_lost
 @onready var attributes: AttributeComponent = $AttributeComponent
 @onready var equipment: EquipmentComponent = $EquipmentComponent
 @onready var inventory: InventoryComponent = $InventoryComponent
+@onready var talismans: TalismanComponent = $TalismanComponent
 @onready var inventory_ui: InventoryUI = $InventoryUI
 @onready var movement: MovementComponent = $MovementComponent
+@onready var navigation_agent: NavigationAgent3D = $NavigationAgent3D
 @onready var combat: CombatComponent = $CombatComponent
 @onready var skill: SkillComponent = $SkillComponent
 @onready var visual: VisualComponent = $VisualComponent
@@ -30,10 +32,12 @@ var _controller_enabled_before_inventory := true
 func _ready() -> void:
 	add_to_group("players")
 	attributes.initialize(stats)
+	talismans.initialize(attributes)
 	equipment.initialize(stats)
 	movement.stats = stats
 	movement.attributes = attributes
 	movement.body = self
+	movement.set_navigation_agent(navigation_agent)
 
 	skill.stats = stats
 	skill.attributes = attributes

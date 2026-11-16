@@ -38,7 +38,7 @@ approach_offset = 0.2
 
 [node name="InteractArea" type="Area3D" parent="."]
 collision_layer = 0
-collision_mask = 1
+collision_mask = 4
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="InteractArea"]
 position = Vector3(0, 0.8, 0)

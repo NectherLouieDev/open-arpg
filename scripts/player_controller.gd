@@ -8,10 +8,14 @@ var targeting: TargetingComponent
 var skill: SkillComponent
 var combat: CombatComponent
 
-@export_flags_3d_physics var clickable_layer_mask: int = 1
+@export_flags_3d_physics var clickable_layer_mask: int = 13
+@export var stick_target_radius := 2.5
 
 var _enabled := true
 var _last_input_was_controller := false
+var _controller_mode_active := false
+var move_click_target: Node3D
+var move_stick_target: Node3D
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not _enabled:
@@ -19,6 +23,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("move_click"):
 		if not is_instance_valid(camera_rig) or not is_instance_valid(camera_rig.camera) or not is_instance_valid(targeting):
 			return
+		_switch_to_click_mode()
 		_resolve_move_click(event.position)
 		_last_input_was_controller = false
 	elif event is InputEventJoypadButton:
@@ -35,11 +40,19 @@ func poll_input() -> void:
 		return
 	var move_stick := Input.get_vector("move_stick_left", "move_stick_right", "move_stick_up", "move_stick_down")
 	var world_move_direction := _camera_relative_move_direction(move_stick)
-	movement.set_move_intent(world_move_direction)
-	if move_stick.length_squared() > 0.001 and is_instance_valid(targeting):
-		targeting.clear_target()
 	if move_stick.length_squared() > 0.001:
+		if not _controller_mode_active:
+			_switch_to_stick_mode()
+		var stick_destination := movement.body.global_position + world_move_direction * stick_target_radius
+		stick_destination = movement.project_to_navigation(stick_destination)
+		if is_instance_valid(move_stick_target):
+			move_stick_target.global_position = stick_destination
+		movement.set_move_target(stick_destination)
 		_last_input_was_controller = true
+	elif _controller_mode_active:
+		movement.clear_move_target()
+		if is_instance_valid(move_stick_target) and is_instance_valid(movement.body):
+			move_stick_target.global_position = movement.body.global_position
 
 	if not is_instance_valid(skill):
 		if Input.is_action_just_pressed("dash"):
@@ -75,6 +88,7 @@ func set_enabled(enabled: bool) -> void:
 			if is_instance_valid(targeting):
 				targeting.clear_target()
 			movement.clear_move_target()
+		_controller_mode_active = false
 
 func is_enabled() -> bool:
 	return _enabled
@@ -112,7 +126,10 @@ func _resolve_move_click(screen_position: Vector2) -> void:
 		fallback_ground_point = fallback
 	elif is_instance_valid(targeting.body):
 		fallback_ground_point = targeting.body.global_position
+	fallback_ground_point = movement.project_to_navigation(fallback_ground_point)
 	if hit_result.is_empty():
+		if is_instance_valid(move_click_target):
+			move_click_target.global_position = fallback_ground_point
 		targeting.resolve_click(null, fallback_ground_point)
 		return
 	var collider := hit_result.get("collider") as Node
@@ -121,9 +138,34 @@ func _resolve_move_click(screen_position: Vector2) -> void:
 		if is_instance_valid(skill) and skill.is_targeting():
 			skill.cancel_targeting()
 		targeting.set_attack_target(enemy, combat.get_attack_range())
+		if is_instance_valid(move_click_target):
+			move_click_target.global_position = movement.project_to_navigation(enemy.global_position)
 		return
 	var approachable := _find_approachable(collider)
-	targeting.resolve_click({"hit": collider, "approachable": approachable}, fallback_ground_point)
+	var move_destination := fallback_ground_point
+	if is_instance_valid(approachable) and is_instance_valid(targeting.body):
+		move_destination = movement.project_to_navigation(approachable.get_approach_position(targeting.body.global_position))
+	if is_instance_valid(move_click_target):
+		move_click_target.global_position = move_destination
+	targeting.resolve_click({"hit": collider, "approachable": approachable}, move_destination)
+
+func _switch_to_click_mode() -> void:
+	if is_instance_valid(targeting):
+		targeting.clear_target()
+	if is_instance_valid(movement):
+		movement.clear_move_target()
+	if is_instance_valid(move_stick_target) and is_instance_valid(movement.body):
+		move_stick_target.global_position = movement.body.global_position
+	_controller_mode_active = false
+
+func _switch_to_stick_mode() -> void:
+	if is_instance_valid(targeting):
+		targeting.clear_target()
+	if is_instance_valid(movement):
+		movement.clear_move_target()
+		if is_instance_valid(move_click_target) and is_instance_valid(movement.body):
+			move_click_target.global_position = movement.body.global_position
+	_controller_mode_active = true
 
 func _find_approachable(node: Node) -> ApproachableComponent:
 	var current := node

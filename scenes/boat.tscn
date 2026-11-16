@@ -1,0 +1,93 @@
+[gd_scene load_steps=14 format=3]
+
+[ext_resource type="Script" path="res://scripts/boat_boarding.gd" id="1_boarding"]
+[ext_resource type="Script" path="res://scripts/approachable_component.gd" id="2_approachable"]
+
+[sub_resource type="StandardMaterial3D" id="HullMaterial"]
+albedo_color = Color(0.25, 0.14, 0.08, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="DeckMaterial"]
+albedo_color = Color(0.55, 0.36, 0.18, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="SailMaterial"]
+albedo_color = Color(0.82, 0.68, 0.42, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="TrimMaterial"]
+albedo_color = Color(0.31, 0.19, 0.1, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="HullMesh"]
+size = Vector3(2.0, 0.65, 4.2)
+
+[sub_resource type="BoxMesh" id="DeckMesh"]
+size = Vector3(1.75, 0.12, 3.5)
+
+[sub_resource type="BoxMesh" id="SeatMesh"]
+size = Vector3(1.7, 0.16, 0.28)
+
+[sub_resource type="BoxMesh" id="RailMesh"]
+size = Vector3(0.14, 0.55, 3.6)
+
+[sub_resource type="CylinderMesh" id="MastMesh"]
+top_radius = 0.07
+bottom_radius = 0.11
+height = 3.5
+
+[sub_resource type="PlaneMesh" id="SailMesh"]
+size = Vector2(1.65, 2.1)
+
+[sub_resource type="SphereShape3D" id="BoardRange"]
+radius = 3.1
+
+[node name="Boat" type="Area3D"]
+collision_layer = 1
+collision_mask = 4
+script = ExtResource("1_boarding")
+
+[node name="Hull" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.38, 0)
+material_override = SubResource("HullMaterial")
+mesh = SubResource("HullMesh")
+
+[node name="Deck" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.02, 0)
+material_override = SubResource("DeckMaterial")
+mesh = SubResource("DeckMesh")
+
+[node name="Seat" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.14, -0.65)
+material_override = SubResource("TrimMaterial")
+mesh = SubResource("SeatMesh")
+
+[node name="PortRail" type="MeshInstance3D" parent="."]
+position = Vector3(-0.86, 0.16, 0)
+material_override = SubResource("TrimMaterial")
+mesh = SubResource("RailMesh")
+
+[node name="StarboardRail" type="MeshInstance3D" parent="."]
+position = Vector3(0.86, 0.16, 0)
+material_override = SubResource("TrimMaterial")
+mesh = SubResource("RailMesh")
+
+[node name="Mast" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.55, 0.3)
+material_override = SubResource("TrimMaterial")
+mesh = SubResource("MastMesh")
+
+[node name="Sail" type="MeshInstance3D" parent="."]
+position = Vector3(0.06, 1.6, 0.3)
+rotation_degrees = Vector3(-90, 0, 0)
+material_override = SubResource("SailMaterial")
+mesh = SubResource("SailMesh")
+
+[node name="BoardingRange" type="CollisionShape3D" parent="."]
+position = Vector3(0, 1.0, 0)
+shape = SubResource("BoardRange")
+
+[node name="ApproachableComponent" type="Node" parent="."]
+script = ExtResource("2_approachable")
+interaction_radius = 2.0
+approach_offset = 0.15

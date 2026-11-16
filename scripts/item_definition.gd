@@ -2,16 +2,17 @@ extends Resource
 ## Shared item identity used by world pickups, inventory, and future UI.
 class_name ItemDefinition
 
-enum ItemKind { CURRENCY, EQUIPMENT, SHARD, CONSUMABLE }
+enum ItemKind { CURRENCY, EQUIPMENT, SHARD, CONSUMABLE, TALISMAN }
 enum Attribute { STR, FIN, ARK }
 
 @export var item_id := ""
 @export var display_name := "Unnamed Item"
-@export_enum("Currency", "Equipment", "Shard", "Consumable") var item_kind: int = ItemKind.CURRENCY
+@export_enum("Currency", "Equipment", "Shard", "Consumable", "Talisman") var item_kind: int = ItemKind.CURRENCY
 @export_enum("Common", "Uncommon", "Rare", "Epic", "Legendary") var rarity := 0
 @export var stackable := true
 @export_range(1, 999, 1) var max_stack := 99
 @export var equipment: EquipmentDefinition
+@export var talisman: TalismanDefinition
 @export_enum("STR", "FIN", "ARK") var attribute: int = Attribute.STR
 @export_range(0.0, 1000.0, 1.0) var health_restore := 0.0
 @export_range(0.0, 1000.0, 1.0) var anima_restore := 0.0
@@ -48,6 +49,8 @@ func get_pickup_description(quantity: int = 1) -> String:
 			if anima_restore > 0.0:
 				effects.append("Restores %.0f Anima" % anima_restore)
 			details = ", ".join(effects) if not effects.is_empty() else "Consumable"
+		ItemKind.TALISMAN:
+			details = talisman.get_description() if is_instance_valid(talisman) else "Talisman"
 	return "%s%s\n%s" % [display_name, quantity_text, details]
 
 func _rarity_name(value: int) -> String:

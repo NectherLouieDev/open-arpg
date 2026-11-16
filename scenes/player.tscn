@@ -23,6 +23,7 @@
 [ext_resource type="Script" uid="uid://bvncsm4a3gvkw" path="res://scripts/hit_component.gd" id="22_hit_component"]
 [ext_resource type="Script" uid="uid://dateyujv2bcrb" path="res://scripts/animation_component.gd" id="23_animation_component"]
 [ext_resource type="Script" path="res://scripts/inventory_component.gd" id="24_inventory"]
+[ext_resource type="Script" path="res://scripts/talisman_component.gd" id="42_talisman_component"]
 [ext_resource type="Script" path="res://scripts/inventory_ui.gd" id="25_inventory_ui"]
 [ext_resource type="Script" path="res://scripts/item_definition.gd" id="26_item_definition"]
 [ext_resource type="Resource" path="res://resources/items/gold.tres" id="27_gold"]
@@ -67,6 +68,8 @@ inner_radius = 3.92
 outer_radius = 4.0
 
 [node name="Player" type="CharacterBody3D" unique_id=16488263]
+collision_layer = 4
+collision_mask = 1
 script = ExtResource("1_player")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=877649803]
@@ -91,6 +94,9 @@ known_item_definitions = Array[ExtResource("26_item_definition")]([ExtResource("
 starting_items = Array[ExtResource("26_item_definition")]([ExtResource("27_gold"), ExtResource("28_str_shard"), ExtResource("29_fin_shard"), ExtResource("30_ark_shard"), ExtResource("31_tonic"), ExtResource("32_vial"), ExtResource("34_stick_item"), ExtResource("35_bow_item"), ExtResource("41_hood_item")])
 starting_quantities = PackedInt32Array(125, 3, 2, 2, 3, 2, 1, 1, 1)
 
+[node name="TalismanComponent" type="Node" parent="."]
+script = ExtResource("42_talisman_component")
+
 [node name="InventoryUI" type="CanvasLayer" parent="."]
 script = ExtResource("25_inventory_ui")
 
@@ -100,6 +106,12 @@ scaling = ExtResource("20_stat_scaling")
 
 [node name="MovementComponent" type="Node" parent="." unique_id=1784621049]
 script = ExtResource("3_movement")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+path_desired_distance = 0.25
+target_desired_distance = 0.3
+radius = 0.4
+height = 1.8
 
 [node name="CombatComponent" type="Node" parent="." unique_id=1033726491]
 script = ExtResource("4_combat")
@@ -123,9 +135,9 @@ script = ExtResource("23_animation_component")
 script = ExtResource("7_camera_rig")
 
 [node name="Camera3D" type="Camera3D" parent="CameraRig" unique_id=811951060]
-projection = 1
+projection = 0
 current = true
-size = 22.0
+fov = 45.0
 
 [node name="BodyVisual" type="AnimatedSprite3D" parent="." unique_id=373248018]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)

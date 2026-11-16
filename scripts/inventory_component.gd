@@ -109,6 +109,14 @@ func get_item_definition_for_equipment(equipment: EquipmentDefinition) -> ItemDe
 			return item
 	return null
 
+func get_item_definition_for_talisman(talisman: TalismanDefinition) -> ItemDefinition:
+	if not is_instance_valid(talisman):
+		return null
+	for item in known_item_definitions:
+		if is_instance_valid(item) and item.item_kind == ItemDefinition.ItemKind.TALISMAN and item.talisman == talisman:
+			return item
+	return null
+
 func get_item_quantity(item_id: String) -> int:
 	var total := 0
 	for entry in entries:
